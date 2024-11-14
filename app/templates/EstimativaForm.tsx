@@ -1,53 +1,53 @@
-"use client";
-import { useState } from "react";
-import Secao from "./Secao";
-import VisualizarEstimativa from "./VisualizarEstimativa";
+'use client'
+import { useState } from 'react'
+import Secao from './Secao'
+import VisualizarEstimativa from './VisualizarEstimativa'
 import {
   CategoriaEstimativa,
   Estimativa,
   Secao as SecaoType,
   type Atividade,
-} from "@/app/types/types";
+} from '@/app/types/types'
 
 interface EstimativaFormProps {
-  repertorio: CategoriaEstimativa[];
+  repertorio: CategoriaEstimativa[]
 }
 
 const EstimativaForm: React.FC<EstimativaFormProps> = ({ repertorio }) => {
   const [estimativa, setEstimativa] = useState<Estimativa>({
-    titulo: "",
+    titulo: '',
     secoes: [],
-  });
+  })
 
   const adicionarSecao = () => {
     const novaSecao: SecaoType = {
       id: estimativa.secoes.length,
       nome: `Seção ${estimativa.secoes.length + 1}`,
       atividades: [],
-    };
-    setEstimativa({ ...estimativa, secoes: [...estimativa.secoes, novaSecao] });
-  };
+    }
+    setEstimativa({ ...estimativa, secoes: [...estimativa.secoes, novaSecao] })
+  }
 
   const atualizarNomeSecao = (secaoId: number, novoNome: string) => {
     const novasSecoes = estimativa.secoes.map((secao) =>
-      secao.id === secaoId ? { ...secao, nome: novoNome } : secao
-    );
-    setEstimativa({ ...estimativa, secoes: novasSecoes });
-  };
+      secao.id === secaoId ? { ...secao, nome: novoNome } : secao,
+    )
+    setEstimativa({ ...estimativa, secoes: novasSecoes })
+  }
 
-  const atualizarAtividades = (secaoId: number, atividades: Atividade[]) => { 
+  const atualizarAtividades = (secaoId: number, atividades: Atividade[]) => {
     const novasSecoes = estimativa.secoes.map((secao) =>
-      secao.id === secaoId ? { ...secao, atividades } : secao
-    );
-    setEstimativa({ ...estimativa, secoes: novasSecoes });
-  };
+      secao.id === secaoId ? { ...secao, atividades } : secao,
+    )
+    setEstimativa({ ...estimativa, secoes: novasSecoes })
+  }
 
   const excluirSecao = (secaoId: number) => {
     const novasSecoes = estimativa.secoes.filter(
-      (secao) => secao.id !== secaoId
-    );
-    setEstimativa({ ...estimativa, secoes: novasSecoes });
-  };
+      (secao) => secao.id !== secaoId,
+    )
+    setEstimativa({ ...estimativa, secoes: novasSecoes })
+  }
 
   return (
     <div className="grid grid-cols-2 gap-6 p-4">
@@ -58,7 +58,7 @@ const EstimativaForm: React.FC<EstimativaFormProps> = ({ repertorio }) => {
             Título da estimativa
           </label>
           <input
-className="input input-bordered w-full " 
+            className="input input-bordered w-full "
             name="titulo"
             type="text"
             placeholder="Título da estimativa"
@@ -68,29 +68,26 @@ className="input input-bordered w-full "
             }
           />
         </div>
-       
+
         <div className="flex flex-col gap-4 my-4">
-        {estimativa.secoes.map((secao, index) => (
-          <Secao
-            key={index}
-            secao={secao}
-            repertorio={repertorio}
-            atualizarAtividades={atualizarAtividades}
-            atualizarNomeSecao={atualizarNomeSecao}
-            excluirSecao={excluirSecao}
-          />
-        ))}
-      </div>
-      <button
-          onClick={adicionarSecao}
-          className="btn btn-primary"
-        >
+          {estimativa.secoes.map((secao, index) => (
+            <Secao
+              key={index}
+              secao={secao}
+              repertorio={repertorio}
+              atualizarAtividades={atualizarAtividades}
+              atualizarNomeSecao={atualizarNomeSecao}
+              excluirSecao={excluirSecao}
+            />
+          ))}
+        </div>
+        <button onClick={adicionarSecao} className="btn btn-primary">
           Adicionar Seção
         </button>
       </div>
       <VisualizarEstimativa estimativa={estimativa} />
     </div>
-  );
-};
+  )
+}
 
-export default EstimativaForm;
+export default EstimativaForm

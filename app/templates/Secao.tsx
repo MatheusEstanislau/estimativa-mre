@@ -1,11 +1,11 @@
 // components/Seção.tsx
-import { useState } from "react";
-import Atividade from "./Atividade";
+import { useState } from 'react'
+import Atividade from './Atividade'
 import {
   CategoriaEstimativa,
   Secao as SecaoType,
   Atividade as AtividadeType,
-} from "@/app/types/types";
+} from '@/app/types/types'
 import {
   DndContext,
   closestCenter,
@@ -14,21 +14,20 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core'
 import {
   arrayMove,
   SortableContext,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import SortableItem from "@/app/components/SortableItem";
-import { v4 as uuidv4 } from "uuid"; // Biblioteca para gerar UUIDs
+} from '@dnd-kit/sortable'
+import { v4 as uuidv4 } from 'uuid' // Biblioteca para gerar UUIDs
 
 interface SecaoProps {
-  secao: SecaoType;
-  repertorio: CategoriaEstimativa[];
-  atualizarAtividades: (secaoId: number, atividades: AtividadeType[]) => void;
-  atualizarNomeSecao: (secaoId: number, novoNome: string) => void;
-  excluirSecao: (secaoId: number) => void;
+  secao: SecaoType
+  repertorio: CategoriaEstimativa[]
+  atualizarAtividades: (secaoId: number, atividades: AtividadeType[]) => void
+  atualizarNomeSecao: (secaoId: number, novoNome: string) => void
+  excluirSecao: (secaoId: number) => void
 }
 
 const Secao: React.FC<SecaoProps> = ({
@@ -38,34 +37,36 @@ const Secao: React.FC<SecaoProps> = ({
   atualizarNomeSecao,
   excluirSecao,
 }) => {
-  const [atividades, setAtividades] = useState<AtividadeType[]>(secao.atividades);
+  const [atividades, setAtividades] = useState<AtividadeType[]>(
+    secao.atividades,
+  )
 
   const adicionarAtividade = () => {
     const novaAtividade: AtividadeType = {
       id: uuidv4(), // Gera um identificador único
-      descricao: "",
+      descricao: '',
       itensEstimativa: [],
       confirmada: false,
-    };
-    const novasAtividades = [...atividades, novaAtividade];
-    setAtividades(novasAtividades);
-    atualizarAtividades(secao.id, novasAtividades);
-  };
+    }
+    const novasAtividades = [...atividades, novaAtividade]
+    setAtividades(novasAtividades)
+    atualizarAtividades(secao.id, novasAtividades)
+  }
 
   const atualizarAtividade = (indice: number, atividade: AtividadeType) => {
-    const novasAtividades = [...atividades];
-    novasAtividades[indice] = atividade;
-    setAtividades(novasAtividades);
-    atualizarAtividades(secao.id, novasAtividades);
-  };
+    const novasAtividades = [...atividades]
+    novasAtividades[indice] = atividade
+    setAtividades(novasAtividades)
+    atualizarAtividades(secao.id, novasAtividades)
+  }
 
   const excluirAtividade = (atividadeId: string) => {
     const novasAtividades = atividades.filter(
-      (atividade) => atividade.id !== atividadeId
-    );
-    setAtividades(novasAtividades);
-    atualizarAtividades(secao.id, novasAtividades);
-  };
+      (atividade) => atividade.id !== atividadeId,
+    )
+    setAtividades(novasAtividades)
+    atualizarAtividades(secao.id, novasAtividades)
+  }
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -75,21 +76,21 @@ const Secao: React.FC<SecaoProps> = ({
         delay: 250,
         tolerance: 5,
       },
-    })
-  );
+    }),
+  )
 
-  const onDragEnd = (event: DragEndEvent) => {  
-    const { active, over } = event;
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
 
     if (active.id !== over?.id) {
-      const oldIndex = atividades.findIndex((atv) => atv.id === active.id);
-      const newIndex = atividades.findIndex((atv) => atv.id === over?.id);
+      const oldIndex = atividades.findIndex((atv) => atv.id === active.id)
+      const newIndex = atividades.findIndex((atv) => atv.id === over?.id)
 
-      const novasAtividades = arrayMove(atividades, oldIndex, newIndex);
-      setAtividades(novasAtividades);
-      atualizarAtividades(secao.id, novasAtividades);
+      const novasAtividades = arrayMove(atividades, oldIndex, newIndex)
+      setAtividades(novasAtividades)
+      atualizarAtividades(secao.id, novasAtividades)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -98,7 +99,8 @@ const Secao: React.FC<SecaoProps> = ({
           type="text"
           value={secao.nome}
           onChange={(e) => atualizarNomeSecao(secao.id, e.target.value)}
-          className="input input-bordered w-full "         />
+          className="input input-bordered w-full "
+        />
       </div>
 
       <DndContext
@@ -111,32 +113,51 @@ const Secao: React.FC<SecaoProps> = ({
           strategy={verticalListSortingStrategy}
         >
           <div className="flex flex-col gap-2">
-            {atividades.map((atividade, index) => (
-              <SortableItem key={atividade.id} id={atividade.id}>
-                <Atividade
-                  atividade={atividade}
-                  repertorio={repertorio}
-                  atualizarAtividade={(atv) => atualizarAtividade(index, atv)}
-                  excluirAtividade={() => excluirAtividade(atividade.id)}
-                />
-              </SortableItem>
-            ))}
+            <div className="join join-vertical w-full">
+              {atividades.map((atividade, index) => (
+                <div
+                  key={atividade.id}
+                  className="collapse collapse-arrow join-item border-base-300 border"
+                >
+                  <input
+                    type="radio"
+                    name="my-accordion-4"
+                    defaultChecked={
+                      atividades.findIndex(
+                        (atividadeIndex) => atividadeIndex.id === atividade.id,
+                      ) === index
+                    }
+                  />
+                  <div className="collapse-title text-xl font-medium">
+                    {atividade.descricao !== ''
+                      ? atividade.descricao
+                      : 'Descrição da atividade'}
+                  </div>
+                  <div className="collapse-content">
+                    <Atividade
+                      atividade={atividade}
+                      repertorio={repertorio}
+                      atualizarAtividade={(atv) =>
+                        atualizarAtividade(index, atv)
+                      }
+                      excluirAtividade={() => excluirAtividade(atividade.id)}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </SortableContext>
       </DndContext>
 
-      <button
-        onClick={adicionarAtividade}
-        className="btn btn-success"      >
+      <button onClick={adicionarAtividade} className="btn btn-success">
         Adicionar Atividade
       </button>
-      <button
-        onClick={() => excluirSecao(secao.id)}
-        className="btn btn-error"      >
+      <button onClick={() => excluirSecao(secao.id)} className="btn btn-error">
         Excluir Seção
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default Secao;
+export default Secao

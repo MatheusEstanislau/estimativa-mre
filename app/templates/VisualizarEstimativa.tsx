@@ -1,8 +1,8 @@
 // components/VisualizarEstimativa.tsx
-import { Estimativa } from "@/app/types/types";
+import { Estimativa } from '@/app/types/types'
 
 interface VisualizarEstimativaProps {
-  estimativa: Estimativa;
+  estimativa: Estimativa
 }
 
 const VisualizarEstimativa: React.FC<VisualizarEstimativaProps> = ({
@@ -14,25 +14,25 @@ const VisualizarEstimativa: React.FC<VisualizarEstimativaProps> = ({
       {estimativa.secoes.map((secao, secaoIndex) => (
         <div key={secaoIndex} className="flex flex-col">
           <h3 className="text-xl font-bold">
-            {secao.nome}{" "}
+            {secao.nome}{' '}
             {`${secao.atividades.reduce(
               (acc, value) =>
                 acc +
                 value.itensEstimativa.reduce(
                   (acc, itemEstimativa) => acc + itemEstimativa.usts,
-                  0
+                  0,
                 ),
-              0
-            )} UST's`} 
+              0,
+            )} UST's`}
           </h3>
           {secao.atividades.map((atividade, atividadeIndex) => (
             <div key={atividadeIndex} className="mt-2">
               <p className="mb-2">
                 <strong>{atividade.descricao}</strong>
-              </p> 
+              </p>
               {atividade.itensEstimativa.map((estimativaItem, itemIndex) => (
                 <p key={itemIndex}>
-                  {estimativaItem.item.codigo} - {estimativaItem.item.descricao}{" "}
+                  {estimativaItem.item.codigo} - {estimativaItem.item.descricao}{' '}
                   - <strong>{`${estimativaItem.usts} UST's`} </strong>
                 </p>
               ))}
@@ -41,7 +41,7 @@ const VisualizarEstimativa: React.FC<VisualizarEstimativaProps> = ({
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default VisualizarEstimativa;
+export default VisualizarEstimativa
